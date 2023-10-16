@@ -1,4 +1,4 @@
-module gametime-hub
+module top-reiki-healing
 
 go 1.21.1
 

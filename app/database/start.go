@@ -2,7 +2,7 @@ package database
 
 import (
 	"fmt"
-	"gametime-hub/config"
+	"top-reiki-healing/config"
 	"log"
 
 	"database/sql"

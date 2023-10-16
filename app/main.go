@@ -1,9 +1,9 @@
 package main
 
 import (
-	"gametime-hub/commands"
-	"gametime-hub/controllers"
-	"gametime-hub/database"
+	"top-reiki-healing/commands"
+	"top-reiki-healing/controllers"
+	"top-reiki-healing/database"
 )
 
 func main() {

@@ -3,7 +3,7 @@ package commands
 import (
 	"flag"
 	"fmt"
-	"gametime-hub/commands/fetchers/twitter"
+	"top-reiki-healing/commands/fetchers/twitter"
 	"os"
 )
 
