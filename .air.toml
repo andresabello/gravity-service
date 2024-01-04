@@ -1,0 +1,35 @@
+root = "/app"
+testdata_dir = "testdata"
+tmp_dir = "./cmd/app/tmp"
+
+[build]
+  bin = "./tmp/main"
+  cmd = "go build -o ./tmp/main ."
+  delay = 1000
+  exclude_dir = ["tmp"]
+  exclude_file = []
+  exclude_regex = ["_test.go"]
+  exclude_unchanged = false
+  follow_symlink = false
+  full_bin = ""
+  include_dir = []
+  include_ext = ["go", "tpl", "tmpl"]
+  kill_delay = "0s"
+  log = "build-errors.log"
+  send_interrupt = false
+  stop_on_error = true
+  # Add additional arguments when running binary (bin/full_bin). Will run './tmp/main hello world'.
+  # args_bin = ["ru=http://localhost:9001", "us=http://localhost:9002"]
+
+[color]
+  app = ""
+  build = "yellow"
+  main = "magenta"
+  runner = "green"
+  watcher = "cyan"
+
+[log]
+  time = false
+
+[misc]
+  clean_on_exit = false

@@ -4,7 +4,7 @@ services:
     build:
       context: ./postgres
       dockerfile: Dockerfile
-    container_name: gthub-postgres-container
+    container_name: pi-search-postgres-container
     ports:
       - "${DB_PORT}:5432"
     volumes:
@@ -14,43 +14,37 @@ services:
       POSTGRES_USER: ${DB_USER}
       POSTGRES_PASSWORD: ${DB_PASSWORD}
     networks:
-      - tghubnet
-
+      - pisearchnet
   app:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: gthub-go-app-container
+    container_name: pi-search-api-container
     ports:
-      - "${APP_PORT}:8080"
+      - "${APP_PORT}:8090"
     volumes:
-      - ./app:/app
+      - ./:/app
     depends_on:
       - postgres
     environment:
       POSTGRES_HOST: postgres
-      POSTGRES_PORT: ${DB_PORT}
+      POSTGRES_PORT: 5432
       POSTGRES_USER: ${DB_USER}
       POSTGRES_PASSWORD: ${DB_PASSWORD}
       POSTGRES_DB: ${DB_NAME}
     networks:
-      - tghubnet
-  
+      - pisearchnet
   pgadmin:
     image: dpage/pgadmin4
-    container_name: gthub-pgadmin-container
+    container_name: pi-search-pgadmin-container
     ports:
       - "${PGADMIN_PORT}:80"
     environment: 
       PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL}
-      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD}
-      PGADMIN_DEFAULT_PASSWORD_FILE: ${PGADMIN_DEFAULT_PASSWORD_FILE} 
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD} 
     networks:
-      - tghubnet
+      - pisearchnet
 
 networks:
-  tghubnet:
+  pisearchnet:
     driver: bridge
-
-volumes:
-  data:
