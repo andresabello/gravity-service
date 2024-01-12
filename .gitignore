@@ -23,4 +23,4 @@ go.work
 data/
 .env
 build-errors.log
-gametime-hub
+/cmd/app/
