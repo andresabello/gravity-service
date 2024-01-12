@@ -3,7 +3,7 @@ services:
   postgres:
     build:
       context: ./postgres
-      dockerfile: Dockerfile.production
+      dockerfile: Dockerfile
     container_name: pi-search-postgres-container
     ports:
       - "${DB_PORT}:5432"
@@ -18,7 +18,7 @@ services:
   app:
     build:
       context: .
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.production
     container_name: pi-search-api-container
     ports:
       - "${APP_PORT}:8090"
