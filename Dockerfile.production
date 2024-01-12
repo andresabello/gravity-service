@@ -17,4 +17,4 @@ WORKDIR /app/cmd/app
 RUN go build -o /cmd/app/tmp .
 
 # Define the command to run your application in production
-CMD ["./tmp/main"]
+CMD ["/app/cmd/app/tmp/main"]
