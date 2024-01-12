@@ -15,7 +15,7 @@ ENV GO111MODULE=on
 # Optional: Install any additional build tools or perform other build-related tasks
 
 # Build the application
-RUN go build -o /app/main .
+RUN go build -o /cmd/app/tmp .
 
 # Stage 2: Production Stage
 FROM golang:latest
