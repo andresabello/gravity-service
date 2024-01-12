@@ -1,6 +1,7 @@
 package timeutil
 
 import (
+	"database/sql/driver"
 	"fmt"
 	"pi-search/pkg/tracer"
 	"time"
@@ -47,4 +48,9 @@ func (ct *CustomTime) UnmarshalJSON(b []byte) error {
 	}
 	ct.Time = t
 	return nil
+}
+
+// Value implements the driver.Valuer interface
+func (ct CustomTime) Value() (driver.Value, error) {
+	return ct.Time, nil
 }

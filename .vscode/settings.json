@@ -1,0 +1,11 @@
+{
+    "go.goroot": "/usr/local/go",
+    "go.gopath": "/go",
+    "go.alternateTools": {
+        "GOTOOLDIR": "/usr/local/go/pkg/tool/linux_amd64"
+    },
+    "[go]": {
+        "editor.defaultFormatter": "golang.go"
+    },
+    "editor.defaultFormatter": "golang.go",
+}

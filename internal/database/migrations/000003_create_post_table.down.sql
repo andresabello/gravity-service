@@ -5,4 +5,4 @@ DROP INDEX IF EXISTS idx_content_search;
 
 
 -- Drop the 'post' table if it exists.
-DROP TABLE IF EXISTS post;
+DROP TABLE IF EXISTS posts;

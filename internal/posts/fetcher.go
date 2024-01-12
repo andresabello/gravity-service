@@ -9,6 +9,7 @@ import (
 	"pi-search/pkg/tracer"
 	"pi-search/shared/utilities"
 	"strings"
+	"sync"
 
 	"gorm.io/gorm"
 )
@@ -34,15 +35,30 @@ func Fetch(db *gorm.DB, baseUrl string) error {
 		return tracer.TraceError(err)
 	}
 
+	// Create a wait group to wait for all Goroutines to finish
+	var wg sync.WaitGroup
+
+	// Create a channel to collect errors from Goroutines
+	errCh := make(chan error, len(endpoints))
+
 	for _, url := range endpoints {
+		wg.Add(1)
 		// Start the process asynchronously.
-		go fetchRequest(url, db)
+		go fetchRequest(url, db, errCh, &wg)
+	}
+
+	wg.Wait()
+	close(errCh)
+
+	for err := range errCh {
+		fmt.Println(tracer.TraceError(err))
 	}
 
 	return nil
 }
 
 func fetchEndpoints(baseURL string) ([]string, error) {
+	//TODO: this should be an option that the user has. User should be able to dictate
 	unnecessaryTypes := []string{
 		"attachment",
 		"nav_menu_item",
@@ -50,6 +66,10 @@ func fetchEndpoints(baseURL string) ([]string, error) {
 		"wp_template",
 		"wp_template_part",
 		"wp_navigation",
+		"tribe_organizer",
+		"tribe_venue",
+		"rank_math_schema",
+		"tribe_events",
 	}
 	response, err := http.Get(fmt.Sprintf("%s/wp-json/wp/v2/types", baseURL))
 	if err != nil {
@@ -107,7 +127,12 @@ func fetchEndpoints(baseURL string) ([]string, error) {
 func fetchRequest(
 	baseURL string,
 	db *gorm.DB,
-) error {
+	errCh chan<- error,
+	wg *sync.WaitGroup,
+) {
+	// Ensure that the WaitGroup is decremented when the function exits
+	defer wg.Done()
+
 	perPage := 10
 	for page := 1; ; page++ {
 		response, err := http.Get(fmt.Sprintf(
@@ -117,36 +142,35 @@ func fetchRequest(
 			perPage,
 		))
 		if err != nil {
-			return tracer.TraceError(err)
+			errCh <- tracer.TraceError(err)
 		}
 
 		defer response.Body.Close()
 
 		if response.StatusCode != http.StatusOK {
-			return tracer.TraceError(
+			errCh <- tracer.TraceError(
 				fmt.Errorf("unexpected status code %d", response.StatusCode),
 			)
 		}
 
 		body, err := io.ReadAll(response.Body)
 		if err != nil {
-			return tracer.TraceError(err)
+			errCh <- tracer.TraceError(err)
 		}
 
 		cleanJSON, err := cleanup(body)
 		if err != nil {
-			return tracer.TraceError(err)
+			errCh <- tracer.TraceError(err)
 		}
-
 		posts, err := postUnmarshaler(cleanJSON, baseURL)
 		if err != nil {
-			return tracer.TraceError(err)
+			errCh <- tracer.TraceError(err)
 		}
 
 		for _, post := range posts {
 			err = ingestUsingQueue(db, post)
 			if err != nil {
-				return tracer.TraceError(err)
+				errCh <- tracer.TraceError(err)
 			}
 		}
 
@@ -155,8 +179,6 @@ func fetchRequest(
 			break
 		}
 	}
-
-	return nil
 }
 
 func cleanup(body []byte) ([]byte, error) {

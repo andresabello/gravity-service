@@ -34,7 +34,7 @@ func connectDB(config config.Config) (*gorm.DB, error) {
 		config.DBUser,
 		config.DBPassword,
 		config.DBName,
-		config.DBPort,
+		5432,
 	)
 
 	db, err := gorm.Open(formPostgres.Open(dsn), &gorm.Config{})

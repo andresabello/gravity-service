@@ -12,17 +12,17 @@ This will generate and up and down file with the given name
 
 ### Run generated migration 
 ```
-migrate -database "database_url" -path internal/database/migrations/  up
+migrate -database "postgres://developer:secret@postgres:5432/search?sslmode=disable" -path internal/database/migrations/  up
 ```
 
 ### Reverse the generated migration 
 ```
-migrate -database "database_url" -path internal/database/migrations/  down 
+migrate -database "postgres://developer:secret@postgres:5432/search?sslmode=disable" -path internal/database/migrations/  down 
 ```
 
 ### Force a specific migration
 ```
-migrate -database "database_url" -path internal/database/migrations/  force 20231002034516
+migrate -database "postgres://developer:secret@postgres:5432/search?sslmode=disable" -path internal/database/migrations/  force 20231002034516
 ```
 
 # Queues
