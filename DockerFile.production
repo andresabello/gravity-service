@@ -1,5 +1,4 @@
-# Stage 1: Build Stage
-FROM golang:latest AS builder
+FROM golang:latest
 
 RUN apt-get update && apt-get install -y wget
 
@@ -12,20 +11,10 @@ COPY . .
 
 ENV GO111MODULE=on
 
-# Optional: Install any additional build tools or perform other build-related tasks
+WORKDIR /app/cmd/app
 
 # Build the application
 RUN go build -o /cmd/app/tmp .
 
-# Stage 2: Production Stage
-FROM golang:latest
-
-WORKDIR /app
-
-# Copy only the necessary files from the build stage
-COPY --from=builder /app/main .
-
-# Set any environment variables needed for production
-
 # Define the command to run your application in production
-CMD ["./cmd/app/tmp/main"]
+CMD ["./tmp/main"]
