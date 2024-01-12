@@ -28,4 +28,4 @@ COPY --from=builder /app/main .
 # Set any environment variables needed for production
 
 # Define the command to run your application in production
-CMD ["./main"]
+CMD ["./cmd/app/tmp/main"]
