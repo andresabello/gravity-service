@@ -24,3 +24,4 @@ data/
 .env
 build-errors.log
 /cmd/app/tmp
+/tmp
