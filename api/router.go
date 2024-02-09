@@ -1,8 +1,8 @@
 package api
 
 import (
-	"pi-search/api/controllers"
-	"pi-search/internal/config"
+	"pi-gravity/api/controllers"
+	"pi-gravity/internal/config"
 	"time"
 
 	"github.com/gin-contrib/cors"
@@ -21,7 +21,12 @@ func StartRouter(r *gin.Engine, c *config.Config, db *gorm.DB) {
 		MaxAge:        time.Duration(preFlightRequestCache) * time.Hour,
 	}))
 
-	r.GET("/status", controllers.GetHealth)
-	r.GET("/ingest", controllers.IngestPosts(c, db))
-	r.GET("/search", controllers.Search(c, db))
+	// Create a group for API version 1
+	apiV1 := r.Group("/api/v1")
+
+	apiV1.GET("/status", controllers.GetHealth)
+	apiV1.GET("/makes/", controllers.GetMakes(c, db))
+	apiV1.GET("/models", controllers.GetModels(c, db))
+
+	apiV1.POST("/images/upload", controllers.GetModels(c, db))
 }

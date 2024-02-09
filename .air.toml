@@ -1,9 +1,9 @@
 root = "/app"
 testdata_dir = "testdata"
-tmp_dir = "./cmd/app/tmp"
+tmp_dir = "./tmp"
 
 [build]
-  bin = "./tmp/main"
+  bin = ""
   cmd = "go build -o ./tmp/main ."
   delay = 1000
   exclude_dir = ["tmp"]

@@ -2,7 +2,7 @@ package database
 
 import (
 	"fmt"
-	"pi-search/internal/config"
+	"pi-gravity/internal/config"
 
 	"github.com/golang-migrate/migrate/v4"
 	"github.com/golang-migrate/migrate/v4/database/postgres"

@@ -12,47 +12,22 @@ This will generate and up and down file with the given name
 
 ### Run generated migration 
 ```
-migrate -database "postgres://developer:secret@postgres:5432/search?sslmode=disable" -path internal/database/migrations/  up
+migrate -database "postgres://developer:secret@postgres:5432/gravity?sslmode=disable" -path internal/database/migrations/  up
 ```
 
 ### Reverse the generated migration 
 ```
-migrate -database "postgres://developer:secret@postgres:5432/search?sslmode=disable" -path internal/database/migrations/  down 
+migrate -database "postgres://developer:secret@postgres:5432/gravity?sslmode=disable" -path internal/database/migrations/  down 
 ```
 
 ### Force a specific migration
 ```
-migrate -database "postgres://developer:secret@postgres:5432/search?sslmode=disable" -path internal/database/migrations/  force 20231002034516
+migrate -database "postgres://developer:secret@postgres:5432/gravity?sslmode=disable" -path internal/database/migrations/  force 20231002034516
 ```
 
-# Queues
-### Create a Function with the queue functionality defined. This is for each item passed to the queue
-```
-processFunc := func(item queue.QueueItem) error {
-    // Simulate processing
-    fmt.Printf("Processing item %d: %s\n", item.ID, item.Data)
-    time.Sleep(time.Second)
+# REST API
+## /api/v1/makes
+Get all car makes. If you pass a year, then it will only query makes for that specific year.
 
-    // Simulate failure for demonstration purposes
-    if item.ID%3 == 0 {
-        return fmt.Errorf("failed processing item %d", item.ID)
-    }
-
-    return nil
-}
-```
-### Create a New Queue and pass the defined function
-```
-queueService := queue.NewQueueService(3, 2, processFunc)
-```
-
-### Start the queue
-```
-go queueService.StartProcessor(ctx)
-
-for index, post := range dbPosts {
-    item := queue.QueueItem{ID: index, Data: post}
-    queueService.Enqueue(item)
-}
-```
-
+## /api/v1/makes/{name}/models
+Get all car models from a specific make. We need the year once again to only get the models made for that specific year.
