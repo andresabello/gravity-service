@@ -23,10 +23,8 @@ func StartRouter(r *gin.Engine, c *config.Config, db *gorm.DB) {
 
 	// Create a group for API version 1
 	apiV1 := r.Group("/api/v1")
-
 	apiV1.GET("/status", controllers.GetHealth)
 	apiV1.GET("/makes/", controllers.GetMakes(c, db))
 	apiV1.GET("/models", controllers.GetModels(c, db))
-
 	apiV1.POST("/images/upload", controllers.GetModels(c, db))
 }

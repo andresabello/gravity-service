@@ -11,10 +11,8 @@ COPY . .
 
 ENV GO111MODULE=on
 
-WORKDIR /app
-
 # Build the application
-RUN go build -o ./tmp/main .
+RUN go build -o /app/tmp/main .
 
 # Define the command to run your application in production
-CMD ["./tmp/main"]
+CMD ["/app/tmp/main"]
