@@ -6,7 +6,6 @@ import (
 	"fmt"
 	"log"
 	"pi-gravity/internal/models"
-	"time"
 
 	"github.com/chromedp/chromedp"
 	"github.com/spf13/cobra"
@@ -45,9 +44,6 @@ func crawl(cmd *cobra.Command, args []string, db *gorm.DB) {
 		ctx,
 		chromedp.WithLogf(log.Printf),
 	)
-	defer cancel()
-
-	ctx, cancel = context.WithTimeout(ctx, time.Second*30)
 	defer cancel()
 
 	startYear := 2024
@@ -106,17 +102,17 @@ func crawl(cmd *cobra.Command, args []string, db *gorm.DB) {
 						err,
 					))
 				}
-			} else {
-				makeYear := models.MakeYear{MakeID: makeDB.ID, YearID: yearDB.ID}
-				err := models.AssociateMakeYear(db, makeYear)
-				if err != nil {
-					panic(fmt.Errorf(
-						"unable to create make_year. Record %d and %d error %s",
-						makeYear.YearID,
-						makeYear.MakeID,
-						err,
-					))
-				}
+			}
+
+			makeYear := models.MakeYear{MakeID: makeDB.ID, YearID: yearDB.ID}
+			err = models.AssociateMakeYear(db, makeYear)
+			if err != nil {
+				panic(fmt.Errorf(
+					"unable to create make_year. Record %d and %d error %s",
+					makeYear.YearID,
+					makeYear.MakeID,
+					err,
+				))
 			}
 
 			url := fmt.Sprintf("https://shop.advanceautoparts.com/capi/v33/vehicles/models?type=3&year=%d&make=%s", year, make)
@@ -157,17 +153,17 @@ func crawl(cmd *cobra.Command, args []string, db *gorm.DB) {
 							err,
 						))
 					}
-				} else {
-					modelYear := models.ModelYear{ModelID: modelDB.ID, YearID: yearDB.ID}
-					err := models.AssociateModelYear(db, modelYear)
-					if err != nil {
-						panic(fmt.Errorf(
-							"unable to create model_year. Year %d and Model %d error %s",
-							modelYear.YearID,
-							modelYear.ModelID,
-							err,
-						))
-					}
+				}
+
+				modelYear := models.ModelYear{ModelID: modelDB.ID, YearID: yearDB.ID}
+				err = models.AssociateModelYear(db, modelYear)
+				if err != nil {
+					panic(fmt.Errorf(
+						"unable to create model_year. Year %d and Model %d error %s",
+						modelYear.YearID,
+						modelYear.ModelID,
+						err,
+					))
 				}
 			}
 		}
