@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"log"
 	"pi-gravity/internal/models"
+	"pi-gravity/pkg/tracer"
 
 	"github.com/chromedp/chromedp"
 	"github.com/spf13/cobra"
@@ -59,7 +60,7 @@ func crawl(cmd *cobra.Command, args []string, db *gorm.DB) {
 			}
 			err := models.CreateYear(db, &yearDB)
 			if err != nil {
-				panic(fmt.Errorf(
+				tracer.TraceError(fmt.Errorf(
 					"unable to create year %d; Error %s",
 					yearDB.Year,
 					err,
@@ -73,7 +74,7 @@ func crawl(cmd *cobra.Command, args []string, db *gorm.DB) {
 		)
 
 		if visitWebError != nil {
-			log.Println(visitWebError.Error())
+			fmt.Println(tracer.TraceError(visitWebError))
 		}
 
 		var makesData []string
@@ -95,7 +96,7 @@ func crawl(cmd *cobra.Command, args []string, db *gorm.DB) {
 				}
 				err := models.CreateMake(db, &makeDB)
 				if err != nil {
-					panic(fmt.Errorf(
+					tracer.TraceError(fmt.Errorf(
 						"unable to create make.On Year %d, make is %s; Error: %s",
 						yearDB.Year,
 						make,
@@ -107,7 +108,7 @@ func crawl(cmd *cobra.Command, args []string, db *gorm.DB) {
 			makeYear := models.MakeYear{MakeID: makeDB.ID, YearID: yearDB.ID}
 			err = models.AssociateMakeYear(db, makeYear)
 			if err != nil {
-				panic(fmt.Errorf(
+				tracer.TraceError(fmt.Errorf(
 					"unable to create make_year. Record %d and %d error %s",
 					makeYear.YearID,
 					makeYear.MakeID,
@@ -121,13 +122,13 @@ func crawl(cmd *cobra.Command, args []string, db *gorm.DB) {
 			)
 
 			if visitWebError != nil {
-				log.Println(visitWebError.Error())
+				fmt.Println(tracer.TraceError(visitWebError))
 			}
 
 			var modelsData []string
 			err = json.Unmarshal([]byte(crawledData), &modelsData)
 			if err != nil {
-				fmt.Println("Error:", err)
+				fmt.Println(tracer.TraceError(err))
 				return
 			}
 
@@ -158,12 +159,12 @@ func crawl(cmd *cobra.Command, args []string, db *gorm.DB) {
 				modelYear := models.ModelYear{ModelID: modelDB.ID, YearID: yearDB.ID}
 				err = models.AssociateModelYear(db, modelYear)
 				if err != nil {
-					panic(fmt.Errorf(
+					fmt.Println(tracer.TraceError(fmt.Errorf(
 						"unable to create model_year. Year %d and Model %d error %s",
 						modelYear.YearID,
 						modelYear.ModelID,
 						err,
-					))
+					)))
 				}
 			}
 		}
