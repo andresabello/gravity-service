@@ -73,6 +73,8 @@ func crawl(cmd *cobra.Command, args []string, db *gorm.DB) {
 			getData(url),
 		)
 
+		fmt.Println(crawledData)
+
 		if visitWebError != nil {
 			fmt.Println(tracer.TraceError(visitWebError))
 		}
