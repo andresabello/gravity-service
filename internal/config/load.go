@@ -43,15 +43,13 @@ func Load() (*Config, error) {
 	}
 
 	config := &Config{
-		DBName:       os.Getenv("DB_NAME"),
-		DBUser:       os.Getenv("DB_USER"),
-		DBPassword:   os.Getenv("DB_PASSWORD"),
-		DBHost:       os.Getenv("DB_HOST"),
-		DBPort:       port,
-		APPEnv:       appEnv,
-		CarAPIURL:    os.Getenv("CAR_API_URL"),
-		CarStartYear: os.Getenv("CAR_START_YEAR"),
-		CarEndYear:   os.Getenv("CAR_END_YEAR"),
+		DBName:     os.Getenv("DB_NAME"),
+		DBUser:     os.Getenv("DB_USER"),
+		DBPassword: os.Getenv("DB_PASSWORD"),
+		DBHost:     os.Getenv("DB_HOST"),
+		DBPort:     port,
+		APPEnv:     appEnv,
+		CarAPIURL:  os.Getenv("CAR_API_URL"),
 	}
 
 	portStr := os.Getenv("APP_PORT")
@@ -62,6 +60,26 @@ func Load() (*Config, error) {
 		}
 
 		config.Port = port
+	}
+
+	carStartYear := os.Getenv("CAR_START_YEAR")
+	if carStartYear != "" {
+		carStart, err := strconv.Atoi(carStartYear)
+		if err != nil {
+			return nil, err
+		}
+
+		config.CarStartYear = carStart
+	}
+
+	carEndYear := os.Getenv("CAR_END_YEAR")
+	if carEndYear != "" {
+		carEnd, err := strconv.Atoi(carEndYear)
+		if err != nil {
+			return nil, err
+		}
+
+		config.CarEndYear = carEnd
 	}
 
 	return config, nil
