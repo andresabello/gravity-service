@@ -73,9 +73,9 @@ func Crawl(config *config.Config, db *gorm.DB) {
 			}
 
 			modelURL := fmt.Sprintf(
-				"%s/vehicles/models?type=3&year=%d&make=%s", 
-                config.CarAPIURL, year, 
-                url.QueryEscape(make),
+				"%s/models?type=3&year=%d&make=%s",
+				config.CarAPIURL, year,
+				url.QueryEscape(make),
 			)
 			fmt.Println("Fetching URL:", modelURL)
 
