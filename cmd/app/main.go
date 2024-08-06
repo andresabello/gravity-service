@@ -1,32 +1,32 @@
-package app
+// cmd/app/main.go
+package main
 
 import (
 	"log"
-	"pi-gravity/cmd/crawl"
-	"pi-gravity/internal/app"
+	"os"
 	"pi-gravity/internal/config"
+	"pi-gravity/internal/app"
 
-	"github.com/spf13/cobra"
+	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
 )
 
-func NewAppCommand(config *config.Config, db *gorm.DB) *cobra.Command {
-	rootCmd := &cobra.Command{
-		Use:   "app",
-		Short: "Gravity Support Application",
-		Long:  "Supports services provided by custom gravity forms wordpress plugins",
-		Run: func(cmd *cobra.Command, args []string) {
-			// Run your server logic here
-			app := app.NewApp(config, db)
-			err := app.Router.Run(":8090")
-			if err != nil {
-				log.Fatalf("Failed to start server: %v", err)
-			}
-		},
+func main() {
+	// Initialize your configuration
+	config := &config.Config{} // Replace with actual initialization
+
+	// Initialize the database connection
+	db, err := gorm.Open(sqlite.Open("test.db"), &gorm.Config{})
+	if err != nil {
+		log.Fatalf("Failed to connect to database: %v", err)
 	}
 
-	// Add your commands here
-	rootCmd.AddCommand(crawl.NewCrawlCommand(db))
+	// Create the root command
+	rootCmd := app.NewAppCommand(config, db)
 
-	return rootCmd
+	// Execute the root command
+	if err := rootCmd.Execute(); err != nil {
+		log.Println(err)
+		os.Exit(1)
+	}
 }

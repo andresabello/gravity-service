@@ -21,6 +21,9 @@ type Config struct {
 	TwitterConsumerSecret string
 	TwitterAccessToken    string
 	TwitterAccessSecret   string
+	CarAPIURL             string
+	CarStartYear          int
+	CarEndYear            int
 }
 
 func Load() (*Config, error) {
@@ -40,12 +43,15 @@ func Load() (*Config, error) {
 	}
 
 	config := &Config{
-		DBName:     os.Getenv("DB_NAME"),
-		DBUser:     os.Getenv("DB_USER"),
-		DBPassword: os.Getenv("DB_PASSWORD"),
-		DBHost:     os.Getenv("DB_HOST"),
-		DBPort:     port,
-		APPEnv:     appEnv,
+		DBName:       os.Getenv("DB_NAME"),
+		DBUser:       os.Getenv("DB_USER"),
+		DBPassword:   os.Getenv("DB_PASSWORD"),
+		DBHost:       os.Getenv("DB_HOST"),
+		DBPort:       port,
+		APPEnv:       appEnv,
+		CarAPIURL:    os.Getenv("CAR_API_URL"),
+		CarStartYear: os.Getenv("CAR_START_YEAR"),
+		CarEndYear:   os.Getenv("CAR_END_YEAR"),
 	}
 
 	portStr := os.Getenv("APP_PORT")

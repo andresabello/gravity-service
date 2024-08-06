@@ -1,8 +1,9 @@
+// cmd/commands.go
 package cmd
 
 import (
 	"fmt"
-	"pi-gravity/cmd/app"
+	"pi-gravity/internal/app"
 	"pi-gravity/internal/config"
 
 	"gorm.io/gorm"
